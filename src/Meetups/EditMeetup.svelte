@@ -17,6 +17,21 @@
   let description = "";
   let imageUrl = "";
   let formIsValid = false;
+
+
+  if (id) {
+    const unsubscribe = meetup.subscribe(items => {
+    const selectedMeetup = items.find(i => i.id === id);
+    title = selectedMeetup.title;
+    subtitle = selectedMeetup.subtitle;
+    address = selectedMeetup.address;
+    email = selectedMeetup.contactEmail;
+    description = selectedMeetup.description;
+    imageUrl = selectedMeetup.imageUrl;
+    })
+
+    unsubscribe();
+  }
   
   const dispatch = createEventDispatcher();
 
@@ -39,7 +54,13 @@
       contactEmail:email,
       address: address
     };
-    meetup.addMeetup(meetupData);
+
+    if (id) {
+      meetup.updateMeetup(id, meetupData);
+    } else {
+      meetup.addMeetup(meetupData);
+    }
+    
     dispatch("save");
   }
 
