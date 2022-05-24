@@ -4,6 +4,7 @@
   import Button from "../UI/Button.svelte";
   import Modal from "../UI/Modal.svelte";
   import {isEmpty, isValidEmail} from '../helpers/validation';
+  import meetup from './meetups-store';
 
   let title = "";
  // let titleValid = false; no need to create like this ..svelte create for you,
@@ -26,14 +27,17 @@
   $:formIsValid = titleValid && subtitleValid && addressValid && emailValid && descriptionValid && imageUrlValid;
 
   function submitForm() {
-    dispatch("save", {
+
+    const meetupData = {
       title: title,
       subtitle: subtitle,
-      address: address,
-      email: email,
-      description: description,
-      imageUrl: imageUrl
-    });
+      description:description,
+      imageUrl:imageUrl,
+      contactEmail:email,
+      address: address
+    };
+    meetup.addMeetup(meetupData);
+    dispatch("save");
   }
 
   function cancel () {
