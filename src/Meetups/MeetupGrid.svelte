@@ -1,6 +1,5 @@
 <script>
   import MeetupItem from "./MeetupItem.svelte";
-
   export let meetups;
 </script>
 
