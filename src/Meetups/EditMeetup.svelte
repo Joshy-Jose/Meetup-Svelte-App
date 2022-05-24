@@ -6,6 +6,9 @@
   import {isEmpty, isValidEmail} from '../helpers/validation';
   import meetup from './meetups-store';
 
+
+  export let id = null;
+
   let title = "";
  // let titleValid = false; no need to create like this ..svelte create for you,
   let subtitle = "";
