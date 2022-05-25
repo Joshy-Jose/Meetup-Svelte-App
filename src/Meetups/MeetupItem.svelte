@@ -4,6 +4,7 @@
   import meetup from "./meetups-store";
   import {createEventDispatcher} from 'svelte';
 
+
   export let id;
   export let title;
   export let subtitle;
