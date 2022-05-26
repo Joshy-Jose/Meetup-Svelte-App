@@ -15,8 +15,17 @@
   export let isFav;
 
   function toggleFavorite() {
-    meetup.toggleFavorite(id);
-    console.log(id);
+    fetch(`https://meetup-svelte-f7f1d-default-rtdb.europe-west1.firebasedatabase.app/meetups/${id}.json`,{
+        method:'PATCH',
+        body: JSON.stringify({isFavorite:!isFav}),
+        headers: {'Content-Type': 'application/json'}
+      }).then(res => {
+          if(!res.ok) {
+          throw new Error('Failed!');
+        }
+        meetup.toggleFavorite(id);
+      }).catch(err => console.log(err));
+   
   }
 
   const dispatch = createEventDispatcher();

@@ -100,7 +100,14 @@
     dispatch('cancel');
   }
   function deleteMeetup() {
-    meetup.deleteMeetup(id);
+    fetch("https://meetup-svelte-f7f1d-default-rtdb.europe-west1.firebasedatabase.app/meetups.json",{
+        method: 'DELETE'
+      }).then(res => {
+        if(!res.ok) {
+          throw new Error('Failed!');
+      }
+      meetup.deleteMeetup(id);
+    }).catch(err => console.log(err));
     dispatch("save");
   }
 </script>
