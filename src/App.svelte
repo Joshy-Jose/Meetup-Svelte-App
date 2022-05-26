@@ -6,11 +6,13 @@
   import EditMeetup from "./Meetups/EditMeetup.svelte";
   import meetups from "./Meetups/meetups-store.js";
   import MeetupDetail from "./Meetups/MeetupDetail.svelte";
+  import LoadingSpinner from './UI/LoadingSpinner.svelte';
 
   let editMode;
   let page = 'overview';
   let pagedata = {};
   let editedId;
+  let isLoading = true;
 
 
   fetch("https://meetup-svelte-f7f1d-default-rtdb.europe-west1.firebasedatabase.app/meetups.json")
@@ -29,12 +31,14 @@
         id: key
       })
     }
-    // setTimeout(() => {
-    //   meetups.setMeetups(loadedMeetups);
-    // }, 1000);
+    setTimeout(() => {
+      isLoading = false;
+      meetups.setMeetups(loadedMeetups);
+    }, 1000);
     
   })
   .catch(err => {
+    isLoading = false;
     console.log(err);
   })
 
@@ -79,11 +83,15 @@
   {#if editMode === 'edit'}
     <EditMeetup id={editedId} on:save={saveMeetup} on:cancel={cancelEdit} />
   {/if}
+  {#if isLoading} 
+    <LoadingSpinner/>
+  {:else}
   <MeetupGrid 
     meetups= {$meetups} 
     on:showdetails={showdetails} 
     on:edit={startEdit}
     on:add={() => {editMode = 'edit'}}/>
+    {/if}
   {:else}
   <MeetupDetail id ={pagedata.id} on:close ={closeDetails} />
  {/if}

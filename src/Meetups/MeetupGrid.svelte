@@ -39,13 +39,18 @@
       grid-template-columns: repeat(2, 1fr);
     }
   }
+    #no-meetups {
+      margin: 1rem;
+    }
 </style>
 
 <section id="meetup-controls">
   <MeetupFilter on:select={setFilter}/>
   <Button on:click={() => dispatch('add')}>New Meetup</Button>
 </section>
-
+{#if filteredMeetup.length === 0} 
+<p id="no-meetups">No meetup found, please add some meetup.</p>
+{/if}
 <section id="meetups">
   {#each filteredMeetup as meetup (meetup.id)}
   <div transition:scale animate:flip={{duration:300}}>
