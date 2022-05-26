@@ -56,7 +56,21 @@
     };
 
     if (id) {
-      meetup.updateMeetup(id, meetupData);
+      fetch(`https://meetup-svelte-f7f1d-default-rtdb.europe-west1.firebasedatabase.app/meetups/${id}.json`,{
+        method:'PATCH',
+        body: JSON.stringify(meetupData),
+        headers: {'Content-Type': 'application/json'}
+      })
+      .then(res => {
+        if(!res.ok) {
+          throw new Error('Failed!');
+        }
+        meetup.updateMeetup(id, meetupData);
+      }).catch(err => {
+        console.log("Enter 3");
+        console.log(err);
+      })
+
     } else {
       fetch("https://meetup-svelte-f7f1d-default-rtdb.europe-west1.firebasedatabase.app/meetups.json",{
         method: 'POST',
@@ -65,7 +79,7 @@
 
       }).then(res => {
         if(!res.ok) {
-          throw new console.error('Failed!');
+          throw new Error('Failed!');
         }
         return res.json();
       })
