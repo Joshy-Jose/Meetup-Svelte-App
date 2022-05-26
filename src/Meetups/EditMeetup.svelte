@@ -58,7 +58,25 @@
     if (id) {
       meetup.updateMeetup(id, meetupData);
     } else {
-      meetup.addMeetup(meetupData);
+      fetch("https://meetup-svelte-f7f1d-default-rtdb.europe-west1.firebasedatabase.app/meetups.json",{
+        method: 'POST',
+        body: JSON.stringify({...meetupData, isFavorite: false}),
+        headers: {'Content-Type': 'application/json'}
+
+      }).then(res => {
+        if(!res.ok) {
+          throw new console.error('Failed!');
+        }
+        return res.json();
+      })
+      .then( data => {
+        meetup.addMeetup({
+          ...meetupData,
+        isFavorite: false,
+        id: data.name});
+      })
+      .catch(err => {console.log(err)});
+      
     }
     
     dispatch("save");
