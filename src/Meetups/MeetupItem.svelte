@@ -3,6 +3,7 @@
   import Badge from "../UI/Badge.svelte";
   import meetup from "./meetups-store";
   import {createEventDispatcher} from 'svelte';
+  import LoadingSpinner from '../UI/LoadingSpinner.svelte';
 
 
   export let id;
@@ -14,7 +15,10 @@
   export let email;
   export let isFav;
 
+  let isLoading = false;
+ 
   function toggleFavorite() {
+    isLoading = true;
     fetch(`https://meetup-svelte-f7f1d-default-rtdb.europe-west1.firebasedatabase.app/meetups/${id}.json`,{
         method:'PATCH',
         body: JSON.stringify({isFavorite:!isFav}),
@@ -23,8 +27,11 @@
           if(!res.ok) {
           throw new Error('Failed!');
         }
+        isLoading = false;
         meetup.toggleFavorite(id);
-      }).catch(err => console.log(err));
+      }).catch(err => {
+        isLoading = false;
+        console.log(err)});
    
   }
 
@@ -109,6 +116,9 @@
   <footer>
     <!-- <Button href="mailto:{email}">Contact</Button> -->
     <Button mode="outline" type="button" on:click on:click={() => dispatch('edit', id)}>Edit</Button>
+    {#if isLoading}
+    <LoadingSpinner/>
+    {:else}
     <Button
       mode="outline"
       color={isFav ? null : 'success'}
@@ -116,6 +126,7 @@
       on:click={toggleFavorite}>
       {isFav ? 'Unfavorite' : 'Favorite'}
     </Button>
+    {/if}
     <Button type="button" on:click={()=> dispatch('showdetails', id)}>Show Details</Button>
   </footer>
 </article>

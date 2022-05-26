@@ -7,12 +7,14 @@
   import meetups from "./Meetups/meetups-store.js";
   import MeetupDetail from "./Meetups/MeetupDetail.svelte";
   import LoadingSpinner from './UI/LoadingSpinner.svelte';
+  import Error from './UI/Error.svelte';
 
   let editMode;
   let page = 'overview';
   let pagedata = {};
   let editedId;
   let isLoading = true;
+  let error;
 
 
   fetch("https://meetup-svelte-f7f1d-default-rtdb.europe-west1.firebasedatabase.app/meetups.json")
@@ -33,11 +35,12 @@
     }
     setTimeout(() => {
       isLoading = false;
-      meetups.setMeetups(loadedMeetups.reverse());
+      meetups.setMeetups(loadedMeetups.reverse()); //show last inserted on first o
     }, 1000);
     
   })
   .catch(err => {
+    error = err;
     isLoading = false;
     console.log(err);
   })
@@ -65,6 +68,9 @@
     editMode = 'edit';
     editedId = event.detail;
   }
+  function clearError () {
+    error =null;
+  }
 </script>
 
 <style>
@@ -76,6 +82,9 @@
 </style>
 
 <Header />
+{#if error}
+<Error message = {error.message} on:cancel={clearError}/>
+{/if}
 
 <main>
   {#if page === 'overview'}
